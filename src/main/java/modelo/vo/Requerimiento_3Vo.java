@@ -4,7 +4,10 @@ public class Requerimiento_3Vo {
     // Su código
     private String material;
     private int idProyecto;
+    private final int NUM_COLUM = 2;
 
+    public Requerimiento_3Vo() {
+    }
 
     public Requerimiento_3Vo(String material, int idProyecto) {
         this.material = material;
@@ -17,6 +20,10 @@ public class Requerimiento_3Vo {
 
     public void setMaterial(String material) {
         this.material = material;
+    }
+
+    public int getNumColum() {
+        return this.NUM_COLUM;
     }
 
     public int getIdProyecto() {

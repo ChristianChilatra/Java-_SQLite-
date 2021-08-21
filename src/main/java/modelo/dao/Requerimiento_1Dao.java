@@ -34,11 +34,12 @@ public class Requerimiento_1Dao {
 
             sizeColum = objectVo.getNumColum();
 
-            int iterador = 0;
 
 
             ciudades = new ArrayList<String>();
             promedios = new ArrayList<Float>();
+
+            int iterador = 0;
 
             while (rs.next()) {
 
