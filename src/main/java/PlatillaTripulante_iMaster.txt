@@ -1,0 +1,305 @@
+/*
+ * Pueda usar esta plantilla para la carga del reto a iMaster
+ * Copie las clases de los paquetes Modelo, Vista, Controlador y Util
+ * No incluya los import de los archivos .java solo las clases
+ */
+// Importaciones necesarias en iMaster
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+// Util (No modificar)
+class JDBCUtilities {
+    private static final String DATABASE_LOCATION = "ProyectosConstruccion.db";
+
+    public static Connection getConnection() throws SQLException {
+        String url = "jdbc:sqlite:"+DATABASE_LOCATION;
+
+        return DriverManager.getConnection(url);
+    }
+}
+
+// Remplace en adelante por las clases de sus archivos .java
+
+// Vista
+public class VistaRequerimientos {
+
+    public static final ControladorRequerimientos controlador = new ControladorRequerimientos();
+
+    public static void requerimiento1() {
+        try {
+            var listaReq_1 = controlador.consultarRequerimiento1();
+            for (Requerimiento_1Vo requerimiento_1Vo : listaReq_1) {
+                System.out.print(requerimiento_1Vo.getCiudad() + " ");
+                System.out.println(requerimiento_1Vo.getPromedio() + " ");
+            }
+        } catch (Exception e) {
+            System.out.println("Se ha producido el siguiente error:" + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void requerimiento2() {
+        try {
+            var listaReq_2 = controlador.consultarRequerimiento2();
+            for (Requerimiento_2Vo requerimiento_2Vo : listaReq_2) {
+                System.out.print(requerimiento_2Vo.getIdProyecto() + " ");
+                System.out.println(requerimiento_2Vo.getProveedro() + " ");
+            }
+        } catch (Exception e) {
+            System.out.println("Se ha producido el siguiente error:" + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void requerimiento3() {
+        try {
+            var listaReq_3 = controlador.consultarRequerimiento3();
+            for (Requerimiento_3Vo requerimiento_3Vo : listaReq_3) {
+                System.out.print(requerimiento_3Vo.getIdProyecto() + " ");
+                System.out.println(requerimiento_3Vo.getMaterial() + " ");
+            }
+        } catch (Exception e) {
+            System.out.println("Se ha producido el siguiente error:" + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+}
+
+// Controlador
+
+public class ControladorRequerimientos {
+    // Su código
+    private ArrayList<Requerimiento_1Vo> listRequerimiento_1;
+    private ArrayList<Requerimiento_2Vo> listRequerimiento_2;
+    private ArrayList<Requerimiento_3Vo> listRequerimiento_3;
+
+
+    public ArrayList<Requerimiento_1Vo> consultarRequerimiento1() throws SQLException {
+        try {
+            var consulta = new Requerimiento_1Dao();
+            listRequerimiento_1 = consulta.requerimiento1();
+        } catch (Exception e) {
+            System.out.println("Error al enviar datos DAO" + e.getMessage());
+        }
+        return listRequerimiento_1;
+    }
+
+    public ArrayList<Requerimiento_2Vo> consultarRequerimiento2() throws SQLException {
+        // Su código
+        try {
+            var consulta = new Requerimiento_2Dao();
+            listRequerimiento_2 = consulta.requerimiento2();
+        } catch (Exception e) {
+            System.out.println("Error al enviar datos DAO" + e.getMessage());
+        }
+        return listRequerimiento_2;
+    }
+
+    public ArrayList<Requerimiento_3Vo> consultarRequerimiento3() throws SQLException {
+        // Su código}
+        try {
+            var consulta = new Requerimiento_3Dao();
+            listRequerimiento_3 = consulta.requerimiento3();
+        } catch (Exception e) {
+            System.out.println("Error al enviar datos DAO" + e.getMessage());
+        }
+        return listRequerimiento_3;
+    }
+}
+
+// Modelo
+// VO
+public class Requerimiento_1Vo{
+
+    private String ciudad;
+    private int promedio;
+
+
+    public Requerimiento_1Vo(String ciudad, float promedio) {
+        this.ciudad = ciudad;
+        this.promedio = Math.round(promedio);
+    }
+
+    public String getCiudad() {
+        return this.ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
+
+    public int getPromedio() {
+        return this.promedio;
+    }
+
+    public void setPromedio(int promedio) {
+        this.promedio = promedio;
+    }
+
+}
+
+public class Requerimiento_2Vo {
+    // Su código
+
+    private String proveedro;
+    private int idProyecto;
+
+    public Requerimiento_2Vo(String proveedro, int idProyecto) {
+        this.proveedro = proveedro;
+        this.idProyecto = idProyecto;
+    }
+
+    public String getProveedro() {
+        return this.proveedro;
+    }
+
+    public void setProveedro(String proveedro) {
+        this.proveedro = proveedro;
+    }
+
+    public int getIdProyecto() {
+        return this.idProyecto;
+    }
+
+    public void setIdProyecto(int idProyecto) {
+        this.idProyecto = idProyecto;
+    }
+
+}
+
+
+public class Requerimiento_3Vo {
+    // Su código
+    private String material;
+    private int idProyecto;
+
+
+    public Requerimiento_3Vo(String material, int idProyecto) {
+        this.material = material;
+        this.idProyecto = idProyecto;
+    }
+
+    public String getMaterial() {
+        return this.material;
+    }
+
+    public void setMaterial(String material) {
+        this.material = material;
+    }
+
+    public int getIdProyecto() {
+        return this.idProyecto;
+    }
+
+    public void setIdProyecto(int idProyecto) {
+        this.idProyecto = idProyecto;
+    }
+
+}
+
+
+// DAO
+
+public class Requerimiento_1Dao {
+
+    private final String QUERY = "SELECT Ciudad_Residencia, AVG(Salario) AS Promedio  FROM Lider GROUP BY Ciudad_Residencia HAVING AVG(Salario) < 600000 ORDER BY Promedio DESC;";
+    private Connection conn;
+    private ArrayList<Requerimiento_1Vo> listRequerimiento_1 = new ArrayList<Requerimiento_1Vo>();
+
+    public ArrayList<Requerimiento_1Vo> requerimiento1() throws SQLException {
+        try{
+            conn = JDBCUtilities.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(QUERY);
+
+            while (rs.next()) {
+                String Ciudad = rs.getString("Ciudad_Residencia");
+                float Promedio = rs.getFloat("Promedio");
+                Requerimiento_1Vo req_1 = new Requerimiento_1Vo(Ciudad, Promedio);
+                listRequerimiento_1.add(req_1);
+            }
+
+        } catch (Exception e) {
+            System.out.println("No se puedo traer informacion" + e.getMessage());
+        } finally{
+            try {
+                conn.close();
+            } catch (Exception e) {
+                System.out.println("Error en cierre de conexion"+ e.getMessage());
+            }
+
+        }
+        return listRequerimiento_1;
+    }
+}
+
+public class Requerimiento_2Dao {
+
+    private final String QUERY = "SELECT p.ID_Proyecto, c.Proveedor FROM Proyecto p JOIN Compra c ON(p.ID_Proyecto=c.ID_Proyecto) WHERE p.Ciudad ='Quibdo' ORDER BY p.ID_Proyecto";
+    private Connection conn;
+    private ArrayList<Requerimiento_2Vo> listRequerimiento_2 = new ArrayList<Requerimiento_2Vo>();
+
+    public ArrayList<Requerimiento_2Vo> requerimiento2() throws SQLException {
+        try {
+            conn = JDBCUtilities.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(QUERY);
+
+            while (rs.next()) {
+                Integer idProyecto = rs.getInt("ID_Proyecto");
+                String proveedro = rs.getString("Proveedor");
+                Requerimiento_2Vo req_2 = new Requerimiento_2Vo(proveedro, idProyecto);
+                listRequerimiento_2.add(req_2);
+            }
+
+        } catch (Exception e) {
+            System.out.println("No se puedo traer informacion" + e.getMessage());
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                System.out.println("Error en cierre de conexion" + e.getMessage());
+            }
+
+        }
+        return listRequerimiento_2;
+    }
+}
+
+public class Requerimiento_3Dao {
+
+    private final String QUERY = "SELECT p.ID_Proyecto, mc.Nombre_Material FROM Proyecto p JOIN Compra c ON (p.ID_Proyecto=c.ID_Proyecto)    JOIN MaterialConstruccion   mc ON (c.ID_MaterialConstruccion=mc.ID_MaterialConstruccion) WHERE p.ID_Proyecto BETWEEN 5 AND 15 ORDER BY p.ID_Proyecto ASC;";
+    private Connection conn;
+    private ArrayList<Requerimiento_3Vo> listRequerimiento_3 = new ArrayList<Requerimiento_3Vo>();
+
+    public ArrayList<Requerimiento_3Vo> requerimiento3() throws SQLException {
+        try {
+            conn = JDBCUtilities.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(QUERY);
+
+            while (rs.next()) {
+                Integer idProyecto = rs.getInt("ID_Proyecto");
+                String proveedro = rs.getString("Nombre_Material");
+                Requerimiento_3Vo req_3 = new Requerimiento_3Vo(proveedro, idProyecto);
+                listRequerimiento_3.add(req_3);
+            }
+
+        } catch (Exception e) {
+            System.out.println("No se puedo traer informacion" + e.getMessage());
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception e) {
+                System.out.println("Error en cierre de conexion" + e.getMessage());
+            }
+
+        }
+        return listRequerimiento_3;
+    }
+}
